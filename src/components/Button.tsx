@@ -7,7 +7,8 @@ const StyledButton = styled(Button)`
 	border: 1px solid ${props => props.theme.borderColor};
 	border-radius: 4px;
 	height: 2.5rem;
-	appearance: none;
+	display: flex;
+	align-items: center;
 	vertical-align: middle;
 	font-size: 1rem;
 	text-align: center;

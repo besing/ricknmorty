@@ -147,7 +147,8 @@ const Home = () => {
 							<OverlayArrow>
 								<OverlayArrowIcon />
 							</OverlayArrow>
-							<Dialog>
+							{/* The Dialog component serves as a modal layer in combination with the Popover */}
+							<StyledDialog>
 								<StyledFilterContent>
 									<h3>Filter Characters</h3>
 									<TextField>
@@ -191,7 +192,7 @@ const Home = () => {
 										<Button onPress={handleApplyFilters}>Apply Filters</Button>
 									</StyledButtonGroup>
 								</StyledFilterContent>
-							</Dialog>
+							</StyledDialog>
 						</StyledPopover>
 					</DialogTrigger>
 				</StyledControlsWrapper>
@@ -219,13 +220,18 @@ const StyledControlsWrapper = styled.div`
 	justify-content: space-between;
 `;
 
+const StyledDialog = styled(Dialog)`
+	&:focus-visible {
+		outline: none;
+	}
+`;
+
 const StyledFilterContent = styled.div`
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	min-width: 300px;
-	background: ${props => props.theme.overlayBackground};
+	min-width: 250px;
 
 	h3 {
 		margin: 0;
@@ -263,20 +269,17 @@ const slideAnimation = keyframes`
 `;
 
 const StyledPopover = styled(Popover)`
-	--background-color: var(--overlay-background);
-
-	border: 1px solid var(--border-color);
+	border: 1px solid ${props => props.theme.borderColor};
 	box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
 	border-radius: 6px;
-	background: var(--background-color);
-	color: var(--text-color);
+	background: ${props => props.theme.overlayBackground};
+	color: ${props => props.theme.textColor};
 	outline: none;
-	max-width: 250px;
 
 	.react-aria-OverlayArrow svg {
 		display: block;
-		fill: var(--background-color);
-		stroke: var(--border-color);
+		fill: ${props => props.theme.overlayBackground};
+		stroke: ${props => props.theme.borderColor};
 		stroke-width: 1px;
 	}
 
@@ -285,42 +288,6 @@ const StyledPopover = styled(Popover)`
 
 		&:has(.react-aria-OverlayArrow) {
 			margin-bottom: 6px;
-		}
-	}
-
-	&[data-placement='bottom'] {
-		--origin: translateY(-8px);
-
-		&:has(.react-aria-OverlayArrow) {
-			margin-top: 6px;
-		}
-
-		.react-aria-OverlayArrow svg {
-			transform: rotate(180deg);
-		}
-	}
-
-	&[data-placement='right'] {
-		--origin: translateX(-8px);
-
-		&:has(.react-aria-OverlayArrow) {
-			margin-left: 6px;
-		}
-
-		.react-aria-OverlayArrow svg {
-			transform: rotate(90deg);
-		}
-	}
-
-	&[data-placement='left'] {
-		--origin: translateX(8px);
-
-		&:has(.react-aria-OverlayArrow) {
-			margin-right: 6px;
-		}
-
-		.react-aria-OverlayArrow svg {
-			transform: rotate(-90deg);
 		}
 	}
 
