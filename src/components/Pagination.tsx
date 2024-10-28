@@ -1,49 +1,13 @@
 import styled from 'styled-components';
-import { Button } from 'react-aria-components';
+import { StyledButton } from './Button';
 
 import type { CharactersListResponse } from '../types/characters';
-
-const StyledButton = styled(Button)`
-	color: ${props => props.theme.textColor};
-	background: ${props => props.theme.buttonBackground};
-	border: 1px solid ${props => props.theme.borderColor};
-	border-radius: 4px;
-	appearance: none;
-	vertical-align: middle;
-	font-size: 1rem;
-	text-align: center;
-	margin: 0;
-	outline: none;
-	padding: 6px 10px;
-	text-decoration: none;
-
-	&[data-hovered] {
-		cursor: pointer;
-	}
-
-	&[data-pressed] {
-		box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.1);
-		background: ${props => props.theme.buttonBackgroundPressed};
-		border-color: ${props => props.theme.borderColorPressed};
-	}
-
-	&[data-focus-visible] {
-		outline: 2px solid ${props => props.theme.focusRingColor};
-		outline-offset: -1px;
-	}
-
-	&[data-disabled] {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-`;
 
 const PaginationContainer = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 1rem;
-	margin-top: 1rem;
 `;
 
 const PageLabel = styled.span`
@@ -75,4 +39,4 @@ const Pagination = ({ data, handleUrlChange }: PaginationProps) => {
 	);
 };
 
-export { StyledButton, Pagination };
+export { Pagination };

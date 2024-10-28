@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Table, TableHeader, Column, Row, Cell, TableBody } from 'react-aria-components';
 
 const StyledTable = styled(Table)`
+	width: 100%;
 	padding: 0.286rem;
 	border: 1px solid ${props => props.theme.borderColor};
 	border-radius: 6px;
@@ -10,7 +11,6 @@ const StyledTable = styled(Table)`
 	border-spacing: 0;
 	min-height: 100px;
 	align-self: start;
-	max-width: 100%;
 	word-break: break-word;
 	forced-color-adjust: none;
 	border-collapse: collapse;
