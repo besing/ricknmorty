@@ -36,10 +36,11 @@ const StyledTableHeader = styled(TableHeader)`
 	}
 `;
 
-const StyledColumn = styled(Column)`
+const StyledColumn = styled(Column)<{ isHidden?: boolean }>`
 	padding: 4px 8px;
 	text-align: left;
 	outline: none;
+	display: ${props => (props.isHidden ? 'none' : 'table-cell')};
 
 	&[data-focus-visible] {
 		outline: 2px solid ${props => props.theme.focusRingColor};
@@ -47,11 +48,15 @@ const StyledColumn = styled(Column)`
 	}
 
 	.sort-indicator {
-		padding: 0 2px;
+		padding: 0 6px;
 	}
 
 	&:not([data-sort-direction]) .sort-indicator {
 		visibility: hidden;
+	}
+
+	&[data-hovered] {
+		cursor: pointer;
 	}
 `;
 
@@ -109,11 +114,12 @@ const StyledRow = styled(Row)`
 	}
 `;
 
-const StyledCell = styled(Cell)`
+const StyledCell = styled(Cell)<{ isHidden?: boolean }>`
 	padding: 4px 8px;
 	text-align: left;
 	outline: none;
 	transform: translateZ(0);
+	display: ${props => (props.isHidden ? 'none' : 'table-cell')};
 
 	&[data-focus-visible] {
 		outline: 2px solid ${props => props.theme.focusRingColor};
