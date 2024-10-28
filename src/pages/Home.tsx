@@ -18,14 +18,7 @@ import useSWR from 'swr';
 import { StyledButton } from '../components/Button';
 import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
 import { Pagination } from '../components/Pagination';
-import {
-	StyledCell,
-	StyledColumn,
-	StyledRow,
-	StyledTable,
-	StyledTableBody,
-	StyledTableHeader
-} from '../components/Table';
+import { CharactersTable } from '../components/Table';
 import { ReactComponent as OverlayArrowIcon } from '../icons/overlay-arrow-icon.svg';
 
 import type { SortDescriptor } from 'react-aria-components';
@@ -60,12 +53,6 @@ const Home = () => {
 	if (error) return <div>Failed to load</div>;
 	if (!data || isLoading) return <FullPageLoadingSpinner />;
 
-	const ColumnSortIcon = (
-		<span aria-hidden="true" className="sort-indicator">
-			{sortDescriptor?.direction === 'ascending' ? '▲' : '▼'}
-		</span>
-	);
-
 	// We have this extra logic here to allow resetting the manual sort order to the default case (by ID asc.)
 	const handleSortChange = (e: SortDescriptor) => {
 		if (sortDescriptor.direction === 'descending') {
@@ -99,42 +86,11 @@ const Home = () => {
 	return (
 		<StyledPageWrapper>
 			<StyledTableWrapper>
-				<StyledTable
+				<CharactersTable
 					sortDescriptor={sortDescriptor}
-					onSortChange={handleSortChange}
-					aria-label="Characters from Rick and Morty"
-				>
-					<StyledTableHeader>
-						<StyledColumn isHidden allowsSorting>
-							ID
-						</StyledColumn>
-						<StyledColumn>Image</StyledColumn>
-						<StyledColumn isRowHeader allowsSorting id="name">
-							Name
-							{ColumnSortIcon}
-						</StyledColumn>
-						<StyledColumn allowsSorting id="species">
-							Species
-							{ColumnSortIcon}
-						</StyledColumn>
-						<StyledColumn>Origin</StyledColumn>
-						<StyledColumn>Alive</StyledColumn>
-					</StyledTableHeader>
-					<StyledTableBody>
-						{sortedCharacters.map((character: Character) => (
-							<StyledRow href={`/character/${character.id}`} key={character.id}>
-								<StyledCell isHidden>{character.id}</StyledCell>
-								<StyledCell>
-									<img src={character.image} alt={character.name} />
-								</StyledCell>
-								<StyledCell>{character.name}</StyledCell>
-								<StyledCell>{character.species}</StyledCell>
-								<StyledCell>{character.origin.name}</StyledCell>
-								<StyledCell>{character.status}</StyledCell>
-							</StyledRow>
-						))}
-					</StyledTableBody>
-				</StyledTable>
+					handleSortChange={handleSortChange}
+					sortedCharacters={sortedCharacters}
+				/>
 
 				<StyledControlsWrapper>
 					<Pagination data={data} handleUrlChange={setFetchUrl} />

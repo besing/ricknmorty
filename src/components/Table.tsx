@@ -1,5 +1,59 @@
 import styled from 'styled-components';
-import { Table, TableHeader, Column, Row, Cell, TableBody } from 'react-aria-components';
+import { Table, TableHeader, Column, Row, Cell, TableBody, SortDescriptor } from 'react-aria-components';
+import { Character } from '../types/characters';
+
+interface CharactersTableProps {
+	sortDescriptor: SortDescriptor;
+	handleSortChange: (e: SortDescriptor) => void;
+	sortedCharacters: Character[];
+}
+
+const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }: CharactersTableProps) => {
+	const ColumnSortIcon = (
+		<span aria-hidden="true" className="sort-indicator">
+			{sortDescriptor?.direction === 'ascending' ? '▲' : '▼'}
+		</span>
+	);
+
+	return (
+		<StyledTable
+			sortDescriptor={sortDescriptor}
+			onSortChange={handleSortChange}
+			aria-label="Characters from Rick and Morty"
+		>
+			<StyledTableHeader>
+				<StyledColumn isHidden allowsSorting>
+					ID
+				</StyledColumn>
+				<StyledColumn>Image</StyledColumn>
+				<StyledColumn isRowHeader allowsSorting id="name">
+					Name
+					{ColumnSortIcon}
+				</StyledColumn>
+				<StyledColumn allowsSorting id="species">
+					Species
+					{ColumnSortIcon}
+				</StyledColumn>
+				<StyledColumn>Origin</StyledColumn>
+				<StyledColumn>Alive</StyledColumn>
+			</StyledTableHeader>
+			<StyledTableBody>
+				{sortedCharacters.map((character: Character) => (
+					<StyledRow href={`/character/${character.id}`} key={character.id}>
+						<StyledCell isHidden>{character.id}</StyledCell>
+						<StyledCell>
+							<img src={character.image} alt={character.name} />
+						</StyledCell>
+						<StyledCell>{character.name}</StyledCell>
+						<StyledCell>{character.species}</StyledCell>
+						<StyledCell>{character.origin.name}</StyledCell>
+						<StyledCell>{character.status}</StyledCell>
+					</StyledRow>
+				))}
+			</StyledTableBody>
+		</StyledTable>
+	);
+};
 
 const StyledTable = styled(Table)`
 	width: 100%;
@@ -149,4 +203,4 @@ const StyledTableBody = styled(TableBody)`
 	}
 `;
 
-export { StyledTable, StyledTableHeader, StyledColumn, StyledRow, StyledCell, StyledTableBody };
+export { CharactersTable };
