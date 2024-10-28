@@ -18,7 +18,7 @@ import useSWR from 'swr';
 import { StyledButton } from '../components/Button';
 import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
 import { Pagination } from '../components/Pagination';
-import { CharactersTable } from '../components/Table';
+import { CharactersTable } from '../components/CharactersTable';
 import { ReactComponent as OverlayArrowIcon } from '../icons/overlay-arrow-icon.svg';
 
 import type { SortDescriptor } from 'react-aria-components';
