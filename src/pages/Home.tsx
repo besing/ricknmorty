@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useSWR from 'swr';
-import { FullPageLoadingSpinner } from '../components/loading-spinner/LoadingSpinner';
-import { Pagination } from '../components/pagination/Pagination';
+import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
+import { Pagination } from '../components/Pagination';
 import {
 	StyledTable,
 	StyledTableHeader,
@@ -9,7 +9,7 @@ import {
 	StyledRow,
 	StyledCell,
 	StyledTableBody
-} from '../components/table/Table';
+} from '../components/Table';
 
 import type { SortDescriptor } from 'react-aria-components';
 import type { Character, CharactersListResponse } from '../types/characters';

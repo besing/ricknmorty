@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from 'react-aria-components';
 
-import type { CharactersListResponse } from '../../types/characters';
+import type { CharactersListResponse } from '../types/characters';
 
 const StyledButton = styled(Button)`
 	color: ${props => props.theme.textColor};
