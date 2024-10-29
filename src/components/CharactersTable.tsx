@@ -10,7 +10,6 @@ interface CharactersTableProps {
 	sortedCharacters: Character[];
 }
 
-// TODO: Sort order enable for all columns
 const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }: CharactersTableProps) => {
 	const ColumnSortIcon = (
 		<span aria-hidden="true" className="sort-indicator">
@@ -40,9 +39,18 @@ const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }:
 						Species
 						{ColumnSortIcon}
 					</StyledColumn>
-					<StyledColumn className="hide-on-m">Gender</StyledColumn>
-					<StyledColumn className="hide-on-m">Alive</StyledColumn>
-					<StyledColumn className="hide-on-l">Location</StyledColumn>
+					<StyledColumn allowsSorting id="gender" className="hide-on-m">
+						Gender
+						{ColumnSortIcon}
+					</StyledColumn>
+					<StyledColumn allowsSorting id="status" className="hide-on-m">
+						Alive
+						{ColumnSortIcon}
+					</StyledColumn>
+					<StyledColumn allowsSorting id="locationName" className="hide-on-l">
+						Location
+						{ColumnSortIcon}
+					</StyledColumn>
 				</StyledTableHeader>
 				<StyledTableBody>
 					{sortedCharacters.map((character: Character) => (
@@ -63,7 +71,7 @@ const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }:
 							<StyledCell className="hide-on-s">{character.species}</StyledCell>
 							<StyledCell className="hide-on-m">{character.gender}</StyledCell>
 							<StyledCell className="hide-on-m">{character.status}</StyledCell>
-							<StyledCell className="hide-on-l">{character.location.name}</StyledCell>
+							<StyledCell className="hide-on-l">{character.locationName}</StyledCell>
 						</StyledRow>
 					))}
 				</StyledTableBody>
@@ -145,6 +153,7 @@ const StyledColumn = styled(Column)<{ isHidden?: boolean; isColumnTitleHidden?: 
 	outline: none;
 	display: ${props => (props.isHidden ? 'none' : 'table-cell')};
 	visibility: ${props => (props.isColumnTitleHidden ? 'hidden' : 'visible')};
+
 	&[data-focus-visible] {
 		outline: 2px solid ${props => props.theme.focusRingColor};
 		outline-offset: -2px;

@@ -63,15 +63,20 @@ const Home = () => {
 		}
 	};
 
+	const charactersWithLocationName = characters.results.map(character => ({
+		...character,
+		locationName: character.location.name
+	}));
+
 	const sortedCharacters = sortDescriptor.column
-		? characters.results.sort((a, b) => {
+		? charactersWithLocationName.sort((a, b) => {
 				const isAscending = sortDescriptor.direction === 'ascending';
 				const column = sortDescriptor.column as keyof Character; // Type assertion necessary here
 				let compare = a[column] < b[column] ? -1 : 1;
 
 				return isAscending ? compare : -compare;
 		  })
-		: characters.results;
+		: charactersWithLocationName;
 
 	// TODO: Add prefetching (https://swr.vercel.app/docs/prefetching)
 	// TODO: necessary to add React Aria Routing on top? (https://react-spectrum.adobe.com/react-aria/routing.html)

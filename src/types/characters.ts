@@ -32,6 +32,11 @@ interface Character extends ResourceBase {
 	};
 	image: string;
 	episode: string[];
+	/**
+	 * We added this field to enable sorting by location name, too.
+	 * Otherwise it didn't take the location.name property.
+	 */
+	locationName: string;
 }
 
 export type { Info, Character, CharactersListResponse };
