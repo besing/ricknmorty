@@ -104,7 +104,7 @@ const Home = () => {
 const StyledPageWrapper = styled.div`
 	display: flex;
 	justify-content: center;
-	padding-top: 2rem;
+	padding: 2rem 0;
 `;
 
 const StyledTableWrapper = styled.div`
@@ -114,10 +114,16 @@ const StyledTableWrapper = styled.div`
 
 const StyledTableLowerControls = styled.div`
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: stretch;
 	gap: 1rem;
 	margin-top: 1rem;
 	justify-content: space-between;
+
+	@media (min-width: 500px) {
+		flex-direction: row;
+		align-items: center;
+	}
 `;
 
 export default Home;

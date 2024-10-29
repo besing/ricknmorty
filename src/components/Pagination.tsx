@@ -3,18 +3,6 @@ import { StyledButton } from './Button';
 
 import type { CharactersListResponse } from '../types/characters';
 
-const PaginationContainer = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 1rem;
-`;
-
-const PageLabel = styled.span`
-	font-size: 1rem;
-	color: ${props => props.theme.textColor};
-`;
-
 interface PaginationProps {
 	data: CharactersListResponse;
 	handleUrlChange: (url: string) => void;
@@ -38,5 +26,17 @@ const Pagination = ({ data, handleUrlChange }: PaginationProps) => {
 		</PaginationContainer>
 	);
 };
+
+const PaginationContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+`;
+
+const PageLabel = styled.span`
+	font-size: 1rem;
+	color: ${props => props.theme.textColor};
+`;
 
 export { Pagination };
