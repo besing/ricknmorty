@@ -6,6 +6,7 @@ import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
 import { Pagination } from '../components/Pagination';
 import { CharactersTable } from '../components/CharactersTable';
 import { CharactersFilter } from '../components/CharactersFilter';
+import Logo from '../components/Logo';
 
 import type { SortDescriptor } from 'react-aria-components';
 import type { Character, CharactersListResponse } from '../types/characters';
@@ -82,6 +83,7 @@ const Home = () => {
 	return (
 		<StyledPageWrapper>
 			<StyledTableWrapper>
+				<Logo />
 				<CharactersTable
 					sortDescriptor={sortDescriptor}
 					handleSortChange={handleSortChange}
