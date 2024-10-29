@@ -1,46 +1,30 @@
 import { useParams, Link } from 'react-router-dom';
 import useSWR from 'swr';
-import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
 import styled from 'styled-components';
+import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
+import Pill from '../components/Pill';
 
-interface Character {
-	id: number;
-	name: string;
-	status: string;
-	species: string;
-	type: string;
-	gender: string;
-	origin: {
-		name: string;
-		url: string;
-	};
-	location: {
-		name: string;
-		url: string;
-	};
-	image: string;
-	episode: string[];
-	url: string;
-	created: string;
-}
+import type { Character } from '../types/characters';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
+const apiBaseUrl = 'https://rickandmortyapi.com/api/character';
 
 const SingleCharacter = () => {
 	const { id } = useParams();
-	const {
-		data: character,
-		error,
-		isLoading
-	} = useSWR<Character>(`https://rickandmortyapi.com/api/character/${id}`, fetcher);
+	const { data: character, error, isLoading } = useSWR<Character>(`${apiBaseUrl}/${id}`, fetcher);
 
 	if (error) return <div>Failed to load character</div>;
 	if (!character || isLoading) return <FullPageLoadingSpinner />;
 
+	const getEpisodeId = (url: string) => {
+		const parts = url.split('/');
+		return parts[parts.length - 1];
+	};
+
 	return (
 		<Wrapper>
 			<Content>
-				<BackLink to="/">← Back to Home</BackLink>
+				<BackLink to="/">← Back to Overview</BackLink>
 				<img src={character.image} alt={character.name} />
 				<InfoSection>
 					<h1>{character.name}</h1>
@@ -52,24 +36,11 @@ const SingleCharacter = () => {
 					<p>Location: {character.location.name}</p>
 
 					<h2>Episodes:</h2>
-					<ul>
-						{character.episode.map((ep, index) => (
-							<li key={ep}>
-								Episode {index + 1}: {ep}
-							</li>
+					<EpisodesGrid>
+						{character.episode.map(ep => (
+							<Pill key={ep}>{getEpisodeId(ep)}</Pill>
 						))}
-					</ul>
-
-					<MetaSection>
-						<h2>Additional Information:</h2>
-						<p>
-							Character URL:{' '}
-							<a href={character.url} target="_blank" rel="noopener noreferrer">
-								{character.url}
-							</a>
-						</p>
-						<p>Created: {new Date(character.created).toLocaleDateString()}</p>
-					</MetaSection>
+					</EpisodesGrid>
 				</InfoSection>
 			</Content>
 		</Wrapper>
@@ -110,12 +81,6 @@ const InfoSection = styled.div`
 	}
 `;
 
-const MetaSection = styled.div`
-	margin-top: 2rem;
-	padding-top: 1rem;
-	border-top: 1px solid #ccc;
-`;
-
 const BackLink = styled(Link)`
 	align-self: flex-start;
 	color: inherit;
@@ -125,6 +90,13 @@ const BackLink = styled(Link)`
 	&:hover {
 		text-decoration: underline;
 	}
+`;
+
+const EpisodesGrid = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 1rem 0;
 `;
 
 export default SingleCharacter;
