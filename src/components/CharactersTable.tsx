@@ -77,11 +77,12 @@ const StyledTableWrapper = styled.div`
 	border: 1px solid ${props => props.theme.borderColor};
 	border-radius: 6px;
 	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	background: ${props => props.theme.overlayBackground};
 `;
 
 const StyledTable = styled(Table)`
 	width: 100%;
-	padding: 0.286rem;
 	border-radius: 6px; */
 	background: ${props => props.theme.overlayBackground};
 	outline: none;

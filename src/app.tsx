@@ -51,6 +51,11 @@ const theme = {
 };
 
 const GlobalStyle = createGlobalStyle`
+	@font-face {
+		font-family: 'RubikWetPaint';
+		src: url(/fonts/RubikWetPaint-Regular.ttf) format('truetype');
+	}
+
 	body {
 		font-family: BlinkMacSystemFont, Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
 		font-size: 16px;

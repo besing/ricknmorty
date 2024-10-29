@@ -17,7 +17,7 @@ const StyledLogoWrapper = styled.div`
 
 const StyledLink = styled(Link)`
 	display: block;
-	margin: 0 1rem 2rem;
+	margin: 0 1rem;
 	text-align: center;
 	max-width: 350px;
 `;

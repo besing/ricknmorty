@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -29,6 +29,10 @@ const Home = () => {
 	const { page } = useParams();
 	const navigate = useNavigate();
 	const currentPage = page ? parseInt(page) : 1;
+
+	useEffect(() => {
+		setFetchUrl(`${defaultApiUrl}?page=${currentPage}`);
+	}, [currentPage]);
 
 	const [fetchUrl, setFetchUrl] = useState(`${defaultApiUrl}?page=${currentPage}`);
 	const [tempFilters, setTempFilters] = useState<FilterState>({});
@@ -84,6 +88,7 @@ const Home = () => {
 		<StyledPageWrapper>
 			<StyledTableWrapper>
 				<Logo />
+				<StyledPageTitle>Rick & Morty's Interdimensional Index</StyledPageTitle>
 				<CharactersTable
 					sortDescriptor={sortDescriptor}
 					handleSortChange={handleSortChange}
@@ -126,6 +131,17 @@ const StyledTableLowerControls = styled.div`
 		flex-direction: row;
 		align-items: center;
 	}
+`;
+
+const StyledPageTitle = styled.h1`
+	font-size: 2.3rem;
+	font-weight: 700;
+	text-align: center;
+	font-family: 'RubikWetPaint';
+	background: linear-gradient(180deg, ${({ theme }) => theme.purple400} 0%, ${({ theme }) => theme.gray600} 80%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 `;
 
 export default Home;
