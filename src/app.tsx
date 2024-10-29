@@ -60,6 +60,7 @@ const App = () => (
 		<Router>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/:page" element={<Home />} />
 				<Route path="/character/:id" element={<SingleCharacter />} />
 			</Routes>
 		</Router>

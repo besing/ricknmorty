@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
@@ -24,7 +25,11 @@ const fetcher = async (url: string) => {
 const defaultApiUrl = 'https://rickandmortyapi.com/api/character';
 
 const Home = () => {
-	const [fetchUrl, setFetchUrl] = useState(defaultApiUrl);
+	const { page } = useParams();
+	const navigate = useNavigate();
+	const currentPage = page ? parseInt(page) : 1;
+
+	const [fetchUrl, setFetchUrl] = useState(`${defaultApiUrl}?page=${currentPage}`);
 	const [tempFilters, setTempFilters] = useState<FilterState>({});
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: undefined,
@@ -32,11 +37,17 @@ const Home = () => {
 	});
 
 	// The API request (will be re-triggered when pagination or filter selection change)
-	const { data, error, isLoading } = useSWR<CharactersListResponse>(fetchUrl, fetcher);
+	const { data: characters, error, isLoading } = useSWR<CharactersListResponse>(fetchUrl, fetcher);
 
 	// TODO: Make empty results or errors look nicer (inside table view) + show e.g. filters panel OR back-button
+	const handlePageChange = (newUrl: string) => {
+		const pageNumber = new URL(newUrl).searchParams.get('page') || '1';
+		navigate(pageNumber === '1' ? '/' : `/${pageNumber}`);
+		setFetchUrl(newUrl);
+	};
+
 	if (error) return <div>Failed to load</div>;
-	if (!data || isLoading) return <FullPageLoadingSpinner />;
+	if (!characters || isLoading) return <FullPageLoadingSpinner />;
 
 	// We have this extra logic here to allow resetting the manual sort order to the default case (by ID asc.)
 	const handleSortChange = (e: SortDescriptor) => {
@@ -48,14 +59,14 @@ const Home = () => {
 	};
 
 	const sortedCharacters = sortDescriptor.column
-		? data.results.sort((a, b) => {
+		? characters.results.sort((a, b) => {
 				const isAscending = sortDescriptor.direction === 'ascending';
 				const column = sortDescriptor.column as keyof Character; // Type assertion necessary here
 				let compare = a[column] < b[column] ? -1 : 1;
 
 				return isAscending ? compare : -compare;
 		  })
-		: data.results;
+		: characters.results;
 
 	// TODO: Add prefetching (https://swr.vercel.app/docs/prefetching)
 	// TODO: necessary to add React Aria Routing on top? (https://react-spectrum.adobe.com/react-aria/routing.html)
@@ -78,7 +89,7 @@ const Home = () => {
 				/>
 
 				<StyledTableLowerControls>
-					<Pagination data={data} handleUrlChange={setFetchUrl} />
+					<Pagination data={characters} handleUrlChange={handlePageChange} />
 					<CharactersFilter
 						tempFilters={tempFilters}
 						setTempFilters={setTempFilters}

@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import styled from 'styled-components';
 import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
@@ -11,6 +11,7 @@ const apiBaseUrl = 'https://rickandmortyapi.com/api/character';
 
 const SingleCharacter = () => {
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const { data: character, error, isLoading } = useSWR<Character>(`${apiBaseUrl}/${id}`, fetcher);
 
 	if (error) return <div>Failed to load character</div>;
@@ -24,7 +25,7 @@ const SingleCharacter = () => {
 	return (
 		<Wrapper>
 			<Content>
-				<BackLink to="/">← Back to Overview</BackLink>
+				<BackButton onClick={() => navigate(-1)}>← Back to Overview</BackButton>
 				<img src={character.image} alt={character.name} />
 				<InfoSection>
 					<h1>{character.name}</h1>
@@ -81,11 +82,16 @@ const InfoSection = styled.div`
 	}
 `;
 
-const BackLink = styled(Link)`
+const BackButton = styled.button`
 	align-self: flex-start;
 	color: inherit;
 	text-decoration: none;
 	margin-bottom: 1rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	font: inherit;
 
 	&:hover {
 		text-decoration: underline;
