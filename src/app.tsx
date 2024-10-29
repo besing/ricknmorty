@@ -1,6 +1,7 @@
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import SingleCharacter from './pages/SingleCharacter';
 
 const colors = {
 	backgroundColor: '#f8f8f8',
@@ -59,6 +60,7 @@ const App = () => (
 		<Router>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/character/:id" element={<SingleCharacter />} />
 			</Routes>
 		</Router>
 	</ThemeProvider>
