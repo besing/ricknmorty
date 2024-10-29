@@ -55,7 +55,7 @@ const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }:
 										onLoad={() => setCountOfImagesLoaded(prev => prev + 1)}
 										src={character.image}
 										alt={character.name}
-										isVisible={countOfImagesLoaded >= 20}
+										$isVisible={countOfImagesLoaded >= sortedCharacters.length}
 									/>
 								</StyledAvatarWrapper>
 							</StyledCell>
@@ -260,7 +260,7 @@ const PlaceholderAvatar = styled.div`
 	background: ${props => props.theme.gray100};
 `;
 
-const StyledAvatar = styled.img<{ isVisible: boolean }>`
+const StyledAvatar = styled.img<{ $isVisible: boolean }>`
 	position: absolute;
 	top: 3px;
 	left: 16px;
@@ -269,7 +269,7 @@ const StyledAvatar = styled.img<{ isVisible: boolean }>`
 	object-fit: cover;
 	display: block;
 	border-radius: 50%;
-	visibility: ${props => (props.isVisible ? 'visible' : 'hidden')};
+	visibility: ${props => (props.$isVisible ? 'visible' : 'hidden')};
 `;
 
 export { CharactersTable };
