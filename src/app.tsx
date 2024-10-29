@@ -26,7 +26,7 @@ const colors = {
 	red600: '#731200'
 };
 
-const theme = {
+const semanticColors = {
 	tableSeparatorColor: colors.gray200,
 	borderColor: colors.gray300,
 	borderColorHover: colors.gray400,
@@ -43,6 +43,11 @@ const theme = {
 	highlightForeground: 'white',
 	buttonBackground: colors.gray50,
 	buttonBackgroundPressed: colors.backgroundColor
+};
+
+const theme = {
+	...colors,
+	...semanticColors
 };
 
 const GlobalStyle = createGlobalStyle`

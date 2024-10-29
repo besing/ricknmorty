@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import styled from 'styled-components';
 import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
@@ -39,8 +39,8 @@ const SingleCharacter = () => {
 							<Value>{character.species}</Value>
 						</InfoItem>
 						<InfoItem>
-							<Label>Type</Label>
-							<Value>{character.type || 'N/A'}</Value>
+							<Label>Subspecies</Label>
+							<Value>{character.type || '-'}</Value>
 						</InfoItem>
 						<InfoItem>
 							<Label>Gender</Label>
@@ -55,16 +55,16 @@ const SingleCharacter = () => {
 							<Value>{character.location.name}</Value>
 						</InfoItem>
 					</InfoGrid>
-
-					<EpisodesSection>
-						<Label>Episodes</Label>
-						<EpisodesGrid>
-							{character.episode.map(ep => (
-								<Pill key={ep}>{getEpisodeId(ep)}</Pill>
-							))}
-						</EpisodesGrid>
-					</EpisodesSection>
 				</ContentSection>
+
+				<EpisodesSection>
+					<Label>Episodes</Label>
+					<EpisodesGrid>
+						{character.episode.map(ep => (
+							<Pill key={ep}>{getEpisodeId(ep)}</Pill>
+						))}
+					</EpisodesGrid>
+				</EpisodesSection>
 			</Card>
 		</Wrapper>
 	);
@@ -75,7 +75,7 @@ const Wrapper = styled.div`
 	flex-direction: column;
 	align-items: center;
 	padding: 2rem;
-	max-width: 800px;
+	max-width: 900px;
 	margin: 0 auto;
 `;
 
@@ -87,12 +87,18 @@ const Card = styled.div`
 	width: 300px;
 	overflow: hidden;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+	@media (min-width: 870px) {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		grid-template-rows: auto auto;
+		width: 100%;
+	}
 `;
 
 const ImageSection = styled.div`
 	position: relative;
-	width: 100%;
-	height: 300px;
+	min-height: 300px;
 `;
 
 const CharacterImage = styled.img`
@@ -101,7 +107,7 @@ const CharacterImage = styled.img`
 	left: 0;
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
+	object-fit: cover;
 `;
 
 const StatusBadge = styled.div<{ $status: string }>`
@@ -119,6 +125,10 @@ const StatusBadge = styled.div<{ $status: string }>`
 
 const ContentSection = styled.div`
 	padding: 1.5rem;
+
+	@media (min-width: 870px) {
+		padding: 2rem;
+	}
 `;
 
 const Title = styled.h1`
@@ -132,7 +142,10 @@ const InfoGrid = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	gap: 1.5rem;
-	margin-bottom: 2rem;
+
+	@media (min-width: 870px) {
+		margin-bottom: 0;
+	}
 `;
 
 const InfoItem = styled.div`
@@ -154,8 +167,13 @@ const Value = styled.span`
 
 const EpisodesSection = styled.div`
 	border-top: 1px solid ${({ theme }) => theme.borderColor};
-	padding-top: 1.5rem;
-	margin-top: 1.5rem;
+	padding: 1.5rem;
+
+	@media (min-width: 870px) {
+		grid-column: 1 / -1;
+		margin-top: 0;
+		padding: 2rem;
+	}
 `;
 
 const EpisodesGrid = styled.div`
