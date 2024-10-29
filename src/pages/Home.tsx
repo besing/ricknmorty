@@ -40,16 +40,14 @@ const Home = () => {
 		column: undefined,
 		direction: undefined
 	});
-
-	// The API request (will be re-triggered when pagination or filter selection change)
-	const { data: characters, error, isLoading } = useSWR<CharactersListResponse>(fetchUrl, fetcher);
-
 	// TODO: Make empty results or errors look nicer (inside table view) + show e.g. filters panel OR back-button
 	const handlePageChange = (newUrl: string) => {
 		const pageNumber = new URL(newUrl).searchParams.get('page') || '1';
 		navigate(pageNumber === '1' ? '/' : `/${pageNumber}`);
 		setFetchUrl(newUrl);
 	};
+
+	const { data: characters, error, isLoading } = useSWR<CharactersListResponse>(fetchUrl, fetcher);
 
 	if (error) return <div>Failed to load</div>;
 	if (!characters || isLoading) return <FullPageLoadingSpinner />;
@@ -77,9 +75,6 @@ const Home = () => {
 				return isAscending ? compare : -compare;
 		  })
 		: charactersWithLocationName;
-
-	// TODO: Add prefetching (https://swr.vercel.app/docs/prefetching)
-	// TODO: necessary to add React Aria Routing on top? (https://react-spectrum.adobe.com/react-aria/routing.html)
 
 	const handleApplyFilters = () => {
 		const params = new URLSearchParams();
@@ -116,11 +111,11 @@ const Home = () => {
 const StyledPageWrapper = styled.div`
 	display: flex;
 	justify-content: center;
-	padding: 2rem 0;
+	padding: 2rem 1rem;
 `;
 
 const StyledTableWrapper = styled.div`
-	width: 800px;
+	width: 900px;
 	max-width: 100%;
 `;
 
@@ -139,7 +134,7 @@ const StyledTableLowerControls = styled.div`
 `;
 
 const StyledPageTitle = styled.h1`
-	font-size: 2.3rem;
+	font-size: 1.8rem;
 	font-weight: 700;
 	text-align: center;
 	font-family: 'RubikWetPaint';
@@ -147,6 +142,10 @@ const StyledPageTitle = styled.h1`
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
+
+	@media (min-width: 500px) {
+		font-size: 2.3rem;
+	}
 `;
 
 export default Home;

@@ -125,7 +125,7 @@ const StyledTable = styled(Table)`
 	.hide-on-l {
 		display: none;
 
-		@media (min-width: 800px) {
+		@media (min-width: 900px) {
 			display: table-cell;
 		}
 	}
@@ -233,8 +233,10 @@ const StyledRow = styled(Row)`
 `;
 
 const StyledCell = styled(Cell)<{ isHidden?: boolean }>`
+	box-sizing: border-box;
 	position: relative;
-	height: 42px;
+	min-width: 66px;
+	height: 49px;
 	padding: 0 8px;
 	text-align: left;
 	outline: none;
@@ -256,26 +258,24 @@ const StyledTableBody = styled(TableBody)`
 
 const StyledAvatarWrapper = styled.div`
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: 7px;
+	left: 16px;
+	width: 36px;
+	height: 36px;
 `;
 
 const PlaceholderAvatar = styled.div`
 	position: absolute;
-	top: 3px;
-	left: 16px;
 	border-radius: 50%;
-	height: 36px;
-	width: 36px;
+	width: 100%;
+	height: 100%;
 	background: ${props => props.theme.gray100};
 `;
 
 const StyledAvatar = styled.img<{ $isVisible: boolean }>`
 	position: absolute;
-	top: 3px;
-	left: 16px;
-	height: 36px;
-	width: 36px;
+	width: 100%;
+	height: 100%;
 	object-fit: cover;
 	display: block;
 	border-radius: 50%;
