@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
 	DialogTrigger,
 	Dialog,
@@ -25,13 +26,20 @@ interface CharactersFilterProps {
 }
 
 const CharactersFilter = ({ tempFilters, setTempFilters, handleApplyFilters }: CharactersFilterProps) => {
+	const [isPopoverOpen, setPopoverOpen] = useState(false);
+
+	const handleApplyButtonPress = () => {
+		handleApplyFilters();
+		setPopoverOpen(false);
+	};
+
 	return (
 		<DialogTrigger>
-			<StyledButton>
+			<StyledButton onPress={() => setPopoverOpen(true)}>
 				<StyledFilterIcon aria-hidden>🔍</StyledFilterIcon>
 				Filters
 			</StyledButton>
-			<StyledPopover>
+			<StyledPopover isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
 				<OverlayArrow>
 					<OverlayArrowIcon />
 				</OverlayArrow>
@@ -52,12 +60,11 @@ const CharactersFilter = ({ tempFilters, setTempFilters, handleApplyFilters }: C
 							/>
 						</TextField>
 						<Select
-							selectedKey={tempFilters.status}
-							defaultSelectedKey="all"
+							selectedKey={tempFilters.status || 'any'}
 							onSelectionChange={selected =>
 								setTempFilters(prev => ({
 									...prev,
-									status: selected === 'all' ? undefined : (selected as FilterState['status'])
+									status: selected === 'any' ? undefined : (selected as FilterState['status'])
 								}))
 							}
 						>
@@ -68,7 +75,7 @@ const CharactersFilter = ({ tempFilters, setTempFilters, handleApplyFilters }: C
 							</StyledSelectButton>
 							<StyledSelectPopover>
 								<StyledListBox>
-									<StyledListBoxItem id="all">Any</StyledListBoxItem>
+									<StyledListBoxItem id="any">Any</StyledListBoxItem>
 									<StyledListBoxItem id="alive">Alive</StyledListBoxItem>
 									<StyledListBoxItem id="dead">Dead</StyledListBoxItem>
 									<StyledListBoxItem id="unknown">Unknown</StyledListBoxItem>
@@ -76,7 +83,7 @@ const CharactersFilter = ({ tempFilters, setTempFilters, handleApplyFilters }: C
 							</StyledSelectPopover>
 						</Select>
 						<StyledButtonGroup>
-							<StyledApplyButton onPress={handleApplyFilters}>Apply Filters</StyledApplyButton>
+							<StyledApplyButton onPress={handleApplyButtonPress}>Apply Filters</StyledApplyButton>
 						</StyledButtonGroup>
 					</StyledFilterContent>
 				</StyledDialog>
