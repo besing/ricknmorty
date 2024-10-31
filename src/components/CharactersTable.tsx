@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Table, TableHeader, Column, Row, Cell, TableBody, SortDescriptor } from 'react-aria-components';
 import { useState } from 'react';
 
-import { Character } from '../types/characters';
+import { Character } from '../types';
 
 interface CharactersTableProps {
 	sortDescriptor: SortDescriptor;

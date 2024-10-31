@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { StyledButton } from './Button';
 
-import type { CharactersListResponse } from '../types/characters';
+import type { CharactersListResponse } from '../types';
 
 interface PaginationProps {
 	data: CharactersListResponse;

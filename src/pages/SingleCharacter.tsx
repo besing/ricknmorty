@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { FullPageLoadingSpinner, LoadingSpinner } from '../components/LoadingSpinner';
 import Pill from '../components/Pill';
 
-import type { Character } from '../types/characters';
+import type { Character } from '../types';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 const apiBaseUrl = 'https://rickandmortyapi.com/api/character';
