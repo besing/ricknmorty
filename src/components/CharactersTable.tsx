@@ -8,16 +8,42 @@ interface CharactersTableProps {
 	sortDescriptor: SortDescriptor;
 	handleSortChange: (e: SortDescriptor) => void;
 	sortedCharacters: Character[];
+	apiError: string;
+	apiIsLoading: boolean;
+	hasFiltersApplied: boolean;
 }
 
-const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }: CharactersTableProps) => {
+const CharactersTable = ({
+	sortDescriptor,
+	handleSortChange,
+	sortedCharacters,
+	apiError,
+	apiIsLoading,
+	hasFiltersApplied
+}: CharactersTableProps) => {
+	const [countOfImagesLoaded, setCountOfImagesLoaded] = useState(0);
+
+	const noFilterResults = hasFiltersApplied && sortedCharacters.length === 0;
+	const hasApiError = !apiIsLoading && apiError;
+
 	const ColumnSortIcon = (
 		<span aria-hidden="true" className="sort-indicator">
 			{sortDescriptor?.direction === 'ascending' ? '▲' : '▼'}
 		</span>
 	);
 
-	const [countOfImagesLoaded, setCountOfImagesLoaded] = useState(0);
+	const EmptyStatePlaceholder = () => {
+		if (noFilterResults) return <div>No results. Try to change filters.</div>;
+		if (hasApiError)
+			return (
+				<div>
+					Failed to load data.
+					<br />
+					Please try again later.
+				</div>
+			);
+		return <div>Loading...</div>;
+	};
 
 	return (
 		<StyledTableWrapper>
@@ -52,7 +78,7 @@ const CharactersTable = ({ sortDescriptor, handleSortChange, sortedCharacters }:
 						{ColumnSortIcon}
 					</StyledColumn>
 				</StyledTableHeader>
-				<StyledTableBody>
+				<StyledTableBody renderEmptyState={EmptyStatePlaceholder}>
 					{sortedCharacters.map((character: Character) => (
 						<StyledRow href={`/character/${character.id}`} key={character.id}>
 							<StyledCell isHidden>{character.id}</StyledCell>
@@ -163,7 +189,10 @@ const StyledColumn = styled(Column)<{ isHidden?: boolean; isColumnTitleHidden?: 
 		padding: 0 6px;
 	}
 
-	&:nth-child(4),
+	&:nth-child(4) {
+		min-width: 130px;
+	}
+
 	&:nth-child(5),
 	&:nth-child(6) {
 		min-width: 100px;
@@ -213,10 +242,6 @@ const StyledRow = styled(Row)`
 		}
 	}
 
-	&[data-disabled] {
-		color: ${props => props.theme.textColorDisabled};
-	}
-
 	&[data-href] {
 		cursor: pointer;
 	}
@@ -253,6 +278,18 @@ const StyledTableBody = styled(TableBody)`
 	&[data-empty] {
 		text-align: center;
 		font-style: italic;
+
+		&::before {
+			content: '';
+			display: block;
+			height: 30px;
+		}
+
+		&::after {
+			content: '';
+			display: block;
+			height: 50px;
+		}
 	}
 `;
 
