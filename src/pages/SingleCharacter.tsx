@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import styled from 'styled-components';
-import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
+import { FullPageLoadingSpinner, LoadingSpinner } from '../components/LoadingSpinner';
 import Pill from '../components/Pill';
 
 import type { Character } from '../types/characters';
@@ -10,6 +11,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 const apiBaseUrl = 'https://rickandmortyapi.com/api/character';
 
 const SingleCharacter = () => {
+	const [isImageLoaded, setIsImageLoaded] = useState(false);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const { data: character, error, isLoading } = useSWR<Character>(`${apiBaseUrl}/${id}`, fetcher);
@@ -27,7 +29,18 @@ const SingleCharacter = () => {
 			<BackButton onClick={() => navigate(-1)}>← Back to Overview</BackButton>
 			<Card>
 				<ImageSection>
-					<CharacterImage src={character.image} alt={character.name} />
+					{!isImageLoaded && (
+						<StyledLoadingSpinnerWrapper>
+							<LoadingSpinner />
+						</StyledLoadingSpinnerWrapper>
+					)}
+					<CharacterImage
+						onLoad={() => {
+							setIsImageLoaded(true);
+						}}
+						src={character.image}
+						alt={character.name}
+					/>
 					<StatusBadge $status={character.status}>{character.status}</StatusBadge>
 				</ImageSection>
 
@@ -108,6 +121,20 @@ const CharacterImage = styled.img`
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	z-index: 1;
+`;
+
+const StyledLoadingSpinnerWrapper = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: ${({ theme }) => theme.overlayBackground};
+	z-index: 2;
 `;
 
 const StatusBadge = styled.div<{ $status: string }>`

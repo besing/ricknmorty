@@ -11,7 +11,7 @@ const LoadingSpinnerContainer = styled.div`
 const LoadingSpinner = styled.div`
 	width: 3rem;
 	height: 3rem;
-	background-image: url('./loading-spinner.svg');
+	background-image: url('/loading-spinner.svg');
 	background-size: contain;
 `;
 
