@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import type { SortDescriptor } from 'react-aria-components';
 import styled from 'styled-components';
 import useSWR from 'swr';
-import { FullPageLoadingSpinner } from '../components/LoadingSpinner';
 import { Pagination } from '../components/Pagination';
 import { CharactersTable } from '../components/CharactersTable';
 import { CharactersFilter } from '../components/CharactersFilter';
 import Logo from '../components/Logo';
+import { handleApplyFilters, handlePageChange } from '../utils';
 
-import type { SortDescriptor } from 'react-aria-components';
-import type { Character, CharactersListResponse } from '../types/characters';
+import type { Character, CharactersListResponse } from '../types';
 
 export interface FilterState {
 	name?: string;
 	status?: 'alive' | 'dead' | 'unknown';
 }
+
+let tableData: Character[] = [];
 
 const fetcher = async (url: string) => {
 	const res = await fetch(url);
@@ -30,27 +32,48 @@ const Home = () => {
 	const navigate = useNavigate();
 	const currentPage = page ? parseInt(page) : 1;
 
-	useEffect(() => {
-		setFetchUrl(`${defaultApiUrl}?page=${currentPage}`);
-	}, [currentPage]);
-
 	const [fetchUrl, setFetchUrl] = useState(`${defaultApiUrl}?page=${currentPage}`);
 	const [tempFilters, setTempFilters] = useState<FilterState>({});
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: undefined,
 		direction: undefined
 	});
-	// TODO: Make empty results or errors look nicer (inside table view) + show e.g. filters panel OR back-button
-	const handlePageChange = (newUrl: string) => {
-		const pageNumber = new URL(newUrl).searchParams.get('page') || '1';
-		navigate(pageNumber === '1' ? '/' : `/${pageNumber}`);
-		setFetchUrl(newUrl);
+
+	const handleFilters = () => {
+		handleApplyFilters(tempFilters, currentPage, navigate, setFetchUrl, defaultApiUrl);
 	};
 
-	const { data: characters, error, isLoading } = useSWR<CharactersListResponse>(fetchUrl, fetcher);
+	const handleUrl = (newUrl: string) => {
+		handlePageChange(newUrl, tempFilters, navigate, setFetchUrl);
+	};
 
-	if (error) return <div>Failed to load</div>;
-	if (!characters || isLoading) return <FullPageLoadingSpinner />;
+	// Initialize from URL params on mount and when URL changes
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const nameParam = urlParams.get('name');
+		const statusParam = urlParams.get('status') as FilterState['status'];
+		const pageParam = urlParams.get('page');
+
+		// Update filters state from URL
+		setTempFilters({
+			name: nameParam || undefined,
+			status: statusParam || undefined
+		});
+
+		// Construct fetch URL with all parameters
+		const params = new URLSearchParams();
+		if (nameParam) params.append('name', nameParam);
+		if (statusParam) params.append('status', statusParam);
+		if (pageParam && pageParam !== '1') params.append('page', pageParam);
+
+		setFetchUrl(`${defaultApiUrl}?${params.toString()}`);
+	}, []);
+
+	const {
+		data: characters,
+		error: apiError,
+		isLoading: apiIsLoading
+	} = useSWR<CharactersListResponse>(fetchUrl, fetcher);
 
 	// We have this extra logic here to allow resetting the manual sort order to the default case (by ID asc.)
 	const handleSortChange = (e: SortDescriptor) => {
@@ -61,10 +84,12 @@ const Home = () => {
 		}
 	};
 
-	const charactersWithLocationName = characters.results.map(character => ({
-		...character,
-		locationName: character.location.name
-	}));
+	const charactersWithLocationName = characters
+		? characters.results.map(character => ({
+				...character,
+				locationName: character.location.name
+		  }))
+		: tableData;
 
 	const sortedCharacters = sortDescriptor.column
 		? charactersWithLocationName.sort((a, b) => {
@@ -76,14 +101,6 @@ const Home = () => {
 		  })
 		: charactersWithLocationName;
 
-	const handleApplyFilters = () => {
-		const params = new URLSearchParams();
-		if (tempFilters.name) params.append('name', tempFilters.name);
-		if (tempFilters.status) params.append('status', tempFilters.status);
-
-		setFetchUrl(`${defaultApiUrl}?${params.toString()}`);
-	};
-
 	return (
 		<StyledPageWrapper>
 			<StyledTableWrapper>
@@ -93,14 +110,17 @@ const Home = () => {
 					sortDescriptor={sortDescriptor}
 					handleSortChange={handleSortChange}
 					sortedCharacters={sortedCharacters}
+					apiIsLoading={apiIsLoading}
+					apiError={apiError}
+					hasFiltersApplied={Object.keys(tempFilters).length > 0}
 				/>
 
 				<StyledTableLowerControls>
-					<Pagination data={characters} handleUrlChange={handlePageChange} />
+					{characters && <Pagination data={characters} handleUrlChange={handleUrl} />}
 					<CharactersFilter
 						tempFilters={tempFilters}
 						setTempFilters={setTempFilters}
-						handleApplyFilters={handleApplyFilters}
+						handleApplyFilters={handleFilters}
 					/>
 				</StyledTableLowerControls>
 			</StyledTableWrapper>
